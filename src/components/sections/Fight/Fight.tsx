@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./Fight.module.scss";
 import ArticleHeading from "../../atoms/ArticleHeading";
 import NeonBlock from "../../organisms/NeonBlock";
+import ExternalTextLink from "../../atoms/ExternalTextLink";
 
 const problems = [
   {
@@ -40,6 +41,9 @@ export default function Fight() {
     leftContent={
       <>
         <ArticleHeading text="ERC-20 vs ERC-223 fight" />
+        <h4 className={styles.subheading}>
+          Unveil the full history of ERC-223 vs ERC-20 fight going since 2017 <ExternalTextLink text="here" href="https://dexaran.github.io/erc223" />
+        </h4>
         <div className={styles.paragraphs}>
           <p className={styles.text}>Tokens and plain ether are deposited differently to &quot;Externally Owner Addresses&quot; (addresses owned by humans) and to smart-contracts. Ether and ERC-223 tokens automatically determine if the recipient of the deposit is a contract or EOA and decide the method of deposit accordingly. ERC-20 tokens however place the burden of determining the transferring method on the user. Even worse, if the ERC-20 token transferring method is chosen incorrectly, this results in the loss of tokens due to the impossibility of error handling with ERC-20 standard.</p>
           <p className={styles.text}>This problem of ERC-20 standard is widely known:</p>
@@ -47,7 +51,7 @@ export default function Fight() {
         <ul className={styles.problemsList}>
           {problems.map((problem) => {
             return <li key={problem.text} className={styles.problemItem}>
-              <a href={problem.href} className={styles.problemItemLink}>
+              <a target="_blank" href={problem.href} className={styles.problemItemLink}>
                 <span>{problem.text}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M18.2227 14.8799C18.2227 15.1201 18.1406 15.3193 17.9766 15.4775C17.8184 15.6357 17.6338 15.7148 17.4229 15.7148C17.2061 15.7148 17.0186 15.6328 16.8604 15.4688C16.708 15.3047 16.6318 15.1201 16.6318 14.915V11.6631L16.79 7.55859L15.3398 9.20215L6.6123 17.9209C6.4541 18.0791 6.26953 18.1582 6.05859 18.1582C5.91211 18.1582 5.77734 18.1201 5.6543 18.0439C5.53125 17.9678 5.43164 17.8682 5.35547 17.7451C5.2793 17.6162 5.24121 17.4814 5.24121 17.3408C5.24121 17.1357 5.32324 16.9512 5.4873 16.7871L14.1973 8.05957L15.832 6.62695L11.543 6.76758H8.48438C8.2793 6.76758 8.09473 6.69141 7.93066 6.53906C7.77246 6.38086 7.69336 6.19629 7.69336 5.98535C7.69336 5.77441 7.76953 5.58984 7.92188 5.43164C8.07422 5.26758 8.27344 5.18555 8.51953 5.18555H17.3613C17.625 5.18555 17.833 5.26465 17.9854 5.42285C18.1377 5.58105 18.2139 5.78613 18.2139 6.03809L18.2227 14.8799Z" fill="currentColor"/>
@@ -56,7 +60,6 @@ export default function Fight() {
             </li>
           })}
         </ul>
-
       </>
     }
     rightContent={

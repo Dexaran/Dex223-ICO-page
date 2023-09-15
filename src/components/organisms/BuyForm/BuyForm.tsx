@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, {ChangeEvent, useCallback, useMemo, useState} from "react";
+import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
 import styles from "./BuyForm.module.scss";
 import {
   TEST_DEX223,
@@ -15,21 +15,22 @@ import {
   useAccount,
   useBalance,
   useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
+  useContractWrite, useNetwork,
+  usePrepareContractWrite, useSwitchNetwork,
   useWaitForTransaction
 } from "wagmi";
 import testICOABI from "../../../constants/abis/testICOABI.json";
 import {formatUnits, parseUnits} from "viem";
 import ERC20ABI from "../../../constants/abis/erc20.json";
 import Preloader from "../../atoms/Preloader";
+import {useSnackbar} from "../../../providers/SnackbarProvider";
 
+const ICOContract: `0x${string}` = "0x1F369D3541AA908021399036830BCe70B4E06DAE";
 
-const ICOContract: `0x${string}` = "0xF8e0fa622025BB391d2136f3c52D8dA5611a68ED";
-
-function ActionButton({isApproved, isEnoughBalance, handleApprove, handleBuy, isAmountEntered, isApproving, symbol}) {
+function ActionButton({isApproved, isEnoughBalance, handleApprove, handleBuy, isAmountEntered, isApproving, symbol, waitingForApprove, chainId, isPurchasing}) {
   const {open, close, setDefaultChain} = useWeb3Modal();
   const {address, isConnected} = useAccount();
+  const { switchNetwork } = useSwitchNetwork();
 
   if(!isConnected) {
     return <Button onClick={open}>Connect wallet</Button>;
@@ -43,8 +44,21 @@ function ActionButton({isApproved, isEnoughBalance, handleApprove, handleBuy, is
     return <Button disabled>Insufficient balance</Button>;
   }
 
+  if(Boolean(chainId) && chainId !== 820) {
+    return <Button onClick={() => switchNetwork(820)}>Switch to Callisto Network</Button>
+  }
+
+  if(isPurchasing) {
+    return <Button disabled>
+      <span className={styles.waitingContent}>
+        <span>Purchasing</span>
+        <Preloader type="circular" size={24} />
+      </span>
+    </Button>
+  }
+
   if(isApproving) {
-    return <Button onClick={handleApprove} disabled>
+    return <Button disabled>
       <span className={styles.waitingContent}>
         <span>Approving</span>
         <Preloader type="circular" size={24} />
@@ -52,22 +66,30 @@ function ActionButton({isApproved, isEnoughBalance, handleApprove, handleBuy, is
     </Button>
   }
 
+  if(waitingForApprove) {
+    return <Button onClick={handleApprove} disabled>
+        <Preloader type="circular" size={24} />
+    </Button>
+  }
+
   if(!isApproved) {
     return <Button onClick={handleApprove}>Approve {symbol}</Button>
   }
 
-  return <Button onClick={handleBuy}>Buy ERC223</Button>
+  return <Button onClick={handleBuy}>Buy Tokens</Button>
 }
 
 export default function BuyForm() {
   const { address } = useAccount();
+  const { chain } = useNetwork();
 
   const [amountToPay, setAmountToPay] = useState("");
+  const {showMessage} = useSnackbar();
 
   const [pickedTokenId, setPickedTokenId] = useState(100);
 
   const contractBalance = useBalance({
-    address: "0xF8e0fa622025BB391d2136f3c52D8dA5611a68ED",
+    address: ICOContract,
     token: "0xf5717D6c1cbAFE00A4c800B227eCe496180244F9",
     chainId: 820,
     watch: true
@@ -112,7 +134,7 @@ export default function BuyForm() {
     ]
   });
 
-  const {data: approvingData ,write: writeTokenApprove} = useContractWrite(allowanceConfig);
+  const {data: approvingData, write: writeTokenApprove, isLoading: waitingForApprove} = useContractWrite(allowanceConfig);
 
   const { isLoading: isApproving } = useWaitForTransaction({
     hash: approvingData?.hash,
@@ -129,7 +151,7 @@ export default function BuyForm() {
     watch: true
   });
 
-  const { write: buyTokens } = useContractWrite({
+  const { data: purchaseData, write: buyTokens, isLoading: waitingForPurchase } = useContractWrite({
     address: ICOContract,
     abi: testICOABI,
     functionName: 'purchaseTokens',
@@ -139,21 +161,14 @@ export default function BuyForm() {
     ]
   });
 
-  // const { config } = usePrepareSendTransaction({
-  //   to: ICOContract,
-  //   value: parseUnits(amountToPay, pickedToken.decimals)
-  // });
-
-  // const { data, sendTransaction } =
-  //   useSendTransaction(config)
+  const { isLoading: isPurchasing, isSuccess,  } = useWaitForTransaction({
+    hash: purchaseData?.hash,
+    onSuccess(data) {
+      showMessage("Successfully purchased");
+    }
+  });
 
   const processBuyTokens = useCallback(() => {
-    // if(pickedToken.id === 11) {
-    //   //send CLO
-    //   sendTransaction();
-    //   return;
-    // }
-
     buyTokens();
   }, [buyTokens]);
 
@@ -172,12 +187,14 @@ export default function BuyForm() {
     }
 
     const percentage = (80000000 - +contractBalance?.data?.formatted) / 80000000;
+    const multipliedPercentage = percentage * 100;
+    console.log(percentage);
 
-    if(percentage < 0.5) {
+    if(multipliedPercentage < 0.5) {
       return 0.5;
     }
 
-    return percentage;
+    return multipliedPercentage;
   }, [contractBalance?.data?.formatted]);
 
 
@@ -197,7 +214,7 @@ export default function BuyForm() {
         </button>
       })}
     </div>
-    <TokenCard balance={tokenToPayBalance?.formatted} type="pay" tokenName={pickedToken.symbol} tokenLogo={pickedToken.image} amount={amountToPay} handleChange={(e: ChangeEvent<HTMLInputElement>) => setAmountToPay(e.target.value)} />
+    <TokenCard balance={tokenToPayBalance?.formatted} type="pay" tokenName={pickedToken.symbol} tokenLogo={pickedToken.image} amount={amountToPay} handleChange={(v) => setAmountToPay(v)} />
     <Spacer height={12} />
     <TokenCard balance={testToken223Balance?.formatted} type="receive" tokenName="DEX223" tokenLogo="/images/tokens/DEX.svg" amount={output} handleChange={null} isLoading={isLoading} readonly />
     <Spacer height={20} />
@@ -207,8 +224,11 @@ export default function BuyForm() {
       isEnoughBalance={+tokenToPayBalance?.formatted > +amountToPay}
       isApproved={allowanceData >= parseUnits(amountToPay, pickedToken.decimals) || pickedToken.id === 11}
       isApproving={isApproving}
-      isAmountEntered={Boolean(amountToPay)}
+      isPurchasing={isPurchasing}
+      waitingForApprove={waitingForApprove || waitingForPurchase}
+      isAmountEntered={Boolean(+amountToPay)}
       symbol={pickedToken.symbol}
+      chainId={chain?.id}
     />
     <Spacer height={8} />
   </>;
