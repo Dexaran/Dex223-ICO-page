@@ -1,3 +1,8 @@
+# Dex223 ICO page
+
+This repo holds the source codes of the ICO page https://www.dex223.io/
+The page is open source and is available to anyone to reuse for free.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
