@@ -11,6 +11,13 @@
   @include typography.t-body-16;
 }
 
+.specialOffer {
+  @include typography.t-body-16;
+  color: colors.$palette-purple;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
 .progressBar {
   height: 30px;
   width: 100%;
@@ -19,6 +26,7 @@
   box-shadow: 2px 0 10px inset rgba(0, 0, 0, 0.2);
   position: relative;
   border: 1px solid colors.$border-primary;
+
 }
 
 .bar {
