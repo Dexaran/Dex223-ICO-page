@@ -1,6 +1,7 @@
 @use "src/styles/colors";
 @use "src/styles/typography";
 @use "src/styles/media";
+@use "src/styles/mixins";
 
 .text {
   color: colors.$text-secondary;
@@ -30,6 +31,11 @@
   overflow: hidden;
   transition-duration: 0.3s;
 
+  svg {
+    width: 380px;
+    height: auto;
+  }
+
   &:hover {
     transition-duration: 0.1s;
   }
@@ -39,7 +45,7 @@
     grid-template-columns: 1fr 198px;
     gap: 60px;
 
-    img {
+    svg {
       width: 198px;
       height: 198px;
     }
@@ -51,7 +57,7 @@
     padding: 16px;
     gap: 0;
 
-    img {
+    svg {
       width: 80px;
       height: 80px;
     }
@@ -62,7 +68,7 @@
     flex-direction: column-reverse;
     padding: 16px;
 
-    img {
+    svg {
       width: 80px;
       height: 80px;
     }
@@ -81,7 +87,7 @@
   transform: translate(-50%, -50%);
   transition: width 0.2s ease, height 0.2s ease;
   filter: blur(20px);
-  opacity: 0.12;
+  opacity: 0.22;
   //opacity: 0.3;
   z-index: 1;
 }
@@ -123,14 +129,7 @@
   }
 
   @include media.for-tablet {
-    justify-content: flex-start;
     align-items: center;
-    margin-bottom: 24px;
-  }
-
-  @include media.for-mobile {
-    justify-content: flex-start;
-    margin-bottom: 24px;
   }
 }
 
@@ -211,4 +210,20 @@
       //transform: translateY(40%);
     }
   }
+}
+
+.pattern1 {
+  position: absolute;
+  right: -615px;
+  top: -247px;
+  animation: breathing-pattern 6s 2s infinite linear alternate;
+  opacity: 0.2;
+}
+
+.pattern2 {
+  position: absolute;
+  left: -616px;
+  bottom: -111px;
+  animation: breathing-pattern 6s infinite linear alternate;
+  opacity: 0.2;
 }

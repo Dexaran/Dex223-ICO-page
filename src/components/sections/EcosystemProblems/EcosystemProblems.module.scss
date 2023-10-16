@@ -1,10 +1,12 @@
 @use "../../../styles/colors";
 @use "../../../styles/typography";
 @use "src/styles/media";
+@use "src/styles/mixins";
 
 .ecosystemProblems {
   background-color: colors.$background-secondary;
   border: 1px solid colors.$border-primary;
+  position: relative;
 
   @include media.for-laptop {
     margin-top: 120px;
@@ -26,6 +28,27 @@
   @include media.for-laptop {
     grid-template-columns: 1fr;
   }
+}
+
+.pattern1, .pattern2 {
+  position: absolute;
+  z-index: -1;
+}
+
+.pattern2 {
+  left: -462px;
+  top: 37px;
+  transform: scale(-1, -1);
+  animation: breathing-pattern 6s infinite linear alternate;
+  opacity: 0.2;
+}
+
+.pattern1 {
+  right: -626px;
+  bottom: -509px;
+  transform: scale(-1, -1);
+  animation: breathing-pattern 6s 2s infinite linear alternate;
+  opacity: 0.2;
 }
 
 .slides {
@@ -81,7 +104,6 @@
 }
 
 .illustration {
-  //width: 589px;
   min-height: 724px;
   border-radius: 20px;
   flex-grow: 1;
@@ -227,6 +249,7 @@
     height: 40px;
     padding: 0 20px;
     border: 1px solid colors.$border-primary;
+    color: colors.$text-primary;
     border-radius: 4px;
     display: flex;
     align-items: center;
@@ -424,7 +447,7 @@
 
 .approveProblemsWrapper {
   border: 1px solid colors.$border-primary;
-  background-image: url("/images/slide-2.png");
+  background-image: url("/images/approve-prob.png");
   background-position: top center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -433,8 +456,37 @@
   border-radius: 20px;
 
   @include media.for-laptop {
-    background-image: url("/images/approve-prob.png");
     border-radius: 0;
+    background-image: url("/images/approve-prob-tablet.png");
+  }
+}
+
+.attentionMark {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+
+  background-image: url("/images/approve-attention.png");
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  opacity: 0;
+  transition-duration: 0.8s;
+  transition-delay: 0.2s;
+
+  &.animate {
+    opacity: 1;
+  }
+
+  @include media.for-laptop {
+    border-radius: 0;
+    background-image: url("/images/approve-attention-tablet.png");
   }
 }
 
@@ -470,11 +522,14 @@
 
 .erc20Problems {
   display: grid;
+  grid-template-columns: 277fr 288fr;
   gap: 14px;
-  grid-template-areas: "green1 red" "green2 red";
-  grid-template-rows: auto auto;
   height: 100%;
   overflow: hidden;
+
+  img {
+    display: block;
+  }
 
   @include media.for-laptop {
     width: 288px;
@@ -491,19 +546,41 @@
   }
 }
 
+.erc20ProblemsLeftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  @include media.for-laptop {
+    gap: 10px;
+  }
+}
+
 .erc20ProblemsGreen1 {
-  grid-area: green1;
-  border-radius: 17px;
+  opacity: 0;
+  transition: opacity ease-out 0.8s;
+
+  &.animate {
+    opacity: 1;
+  }
 }
 
 .erc20ProblemsGreen2 {
-  grid-area: green2;
-  border-radius: 17px;
+  opacity: 0;
+  transition: opacity 0.8s ease-out 0.2s;
+
+  &.animate {
+    opacity: 1;
+  }
 }
 
 .erc20ProblemsRed {
-  grid-area: red;
-  border-radius: 17.575px;
+  opacity: 0;
+  transition: opacity 0.8s ease-out 0.4s;
+
+  &.animate {
+    opacity: 1;
+  }
 
   img {
     width: 100%;
@@ -514,9 +591,14 @@
 .secureErc20 {
   display: grid;
   gap: 14px;
-  grid-template-areas: "green1secure green2secure" "green1secure redSecure";
+  grid-template-columns: 288fr 277fr;
+
   height: 100%;
   overflow: hidden;
+
+  img {
+    display: block;
+  }
 
   @include media.for-laptop {
     width: 288px;
@@ -534,18 +616,32 @@
 }
 
 .secureErc20Green1 {
-  grid-area: green1secure;
+  opacity: 0;
+  transition: opacity 0.8s;
+
+  &.animated {
+    opacity: 1;
+  }
 }
 
 .secureErc20Green2 {
-  grid-area: green2secure;
   width: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease-out 0.2s;
+
+  &.animated {
+    opacity: 1;
+  }
 }
 
 .secureErc20Red {
-  grid-area: redSecure;
   width: 100%;
-  border-radius: 17.575px;
+  opacity: 0;
+  transition: opacity 0.8s ease-out 0.4s;
+
+  &.animated {
+    opacity: 1;
+  }
 }
 
 .lastSlide {
@@ -556,7 +652,7 @@
 
   @include media.for-laptop {
     padding: 30px 0 0 ;
-    img {
+    svg {
       height: 100%;
     }
   }
