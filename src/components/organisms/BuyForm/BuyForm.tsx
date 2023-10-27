@@ -1,8 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import styles from "./BuyForm.module.scss";
-import {
-  getDEXToken, getTokensToPayWith, getICOContractAddress, getChainId, TokenInfo
-} from "@/constants/tokens";
+import {getChainId, getDEXToken, getICOContractAddress, getTokensToPayWith, TokenInfo} from "@/constants/tokens";
 import clsx from "clsx";
 import Image from "next/image";
 import TokenCard from "../TokenCard";
@@ -13,9 +11,15 @@ import {
   useAccount,
   useBalance,
   useContractRead,
-  useContractWrite, useFeeData, useNetwork,
-  usePrepareContractWrite, usePublicClient, useSendTransaction, useSwitchNetwork,
-  useWaitForTransaction, useWalletClient
+  useContractWrite,
+  useFeeData,
+  useNetwork,
+  usePrepareContractWrite,
+  usePublicClient,
+  useSendTransaction,
+  useSwitchNetwork,
+  useWaitForTransaction,
+  useWalletClient
 } from "wagmi";
 import testICOABI from "../../../constants/abis/testICOABI.json";
 import {formatEther, formatGwei, formatUnits, parseGwei, parseUnits} from "viem";
@@ -30,9 +34,13 @@ import GasSettingsDialog from "@/components/organisms/GasSettingsDialog";
 import {
   useTransactionGasFee,
   useTransactionGasLimit,
-  useTransactionGasPrice, useTransactionPriorityFee,
+  useTransactionGasPrice,
+  useTransactionPriorityFee,
   useTransactionTypeStore
 } from "@/stores/useGasSettings";
+import RecentTransactionsDialog from "@/components/organisms/RecentTransactionsDialog";
+import {useRecentTransactions} from "@/stores/useRecentTransactions";
+import useZustandStore from "@/stores/useZustandStore";
 
 function ActionButton({
                         isApproved,
@@ -44,7 +52,6 @@ function ActionButton({
                         symbol,
                         waitingForApprove,
                         chainId,
-                        isPurchasing,
                         contractBalance,
                         output,
   openKeystore
@@ -74,15 +81,6 @@ function ActionButton({
 
   if (Boolean(chainId) && chainId !== 820) {
     return <Button onClick={() => switchNetwork(820)}>Switch to Callisto Network</Button>
-  }
-
-  if (isPurchasing) {
-    return <Button disabled>
-      <span className={styles.waitingContent}>
-        <span>Purchasing</span>
-        <Preloader size={24}/>
-      </span>
-    </Button>
   }
 
   if (isApproving) {
@@ -140,11 +138,13 @@ export default function BuyForm() {
     watch: true
   });
 
-  console.log(feeData);
+  const actions = useRecentTransactions();
 
-  const {
-    type,
-  } = useTransactionTypeStore();
+  console.log(actions);
+
+  const {addTransaction} = actions;
+
+  const { type} = useTransactionTypeStore();
 
   const {baseFee, setBaseFee, setMaxFeePerGas, maxFeePerGas} = useTransactionGasFee();
   const {gasPrice, setGasPrice, setBaseGasPrice} = useTransactionGasPrice();
@@ -169,7 +169,6 @@ export default function BuyForm() {
       setBasePriority(feeData.formatted.maxPriorityFeePerGas);
     }
   }, [feeData, setBaseGasPrice, setBaseFee, setBasePriority, setGasPrice, setMaxFeePerGas, setMaxPriorityFeePerGas]);
-
 
   const contractBalance = useBalance({
     address: getICOContractAddress(devMode),
@@ -292,17 +291,19 @@ export default function BuyForm() {
     ]
   });
 
-  const {data: purchaseData, write: buyTokens, isLoading: waitingForPurchase} = useContractWrite(purchaseConfig);
-
-  const {isLoading: isPurchasing, isSuccess} = useWaitForTransaction({
-    hash: purchaseData?.hash,
-    onSuccess(data) {
-      showMessage("Successfully purchased");
-    },
-    onError(data) {
-      showMessage(data.message, "error");
-    }
-  });
+  const {
+    data: purchaseData,
+    write: buyTokens,
+    isLoading: waitingForPurchase,
+    error: purchaseError,
+  } = useContractWrite({...purchaseConfig, onSettled(data) {
+      showMessage("Transaction submitted!");
+      addTransaction({
+        hash: data.hash,
+        chainId: chain.id,
+        title: `Purchase ${output} DEX223 for ${amountToPay} ${pickedToken.symbol}`
+      })
+    }});
 
   const { data, sendTransaction } =
     useSendTransaction({
@@ -310,6 +311,13 @@ export default function BuyForm() {
       value: parseUnits(amountToPay, pickedToken.decimals),
       gas: gasLimit,
       ...gasSettings,
+      onSettled: (data) => {
+        addTransaction({
+          hash: data.hash,
+          chainId: chain.id,
+          title: `Purchase ${output} DEX223 for ${amountToPay} ${pickedToken.symbol}`
+        })
+      }
     })
 
   const processBuyTokens = useCallback(() => {
@@ -360,6 +368,8 @@ export default function BuyForm() {
   const [dialogOpened, setDialogOpened] = useState(false);
   const [gasSettingsOpened, setGasSettingsOpened] = useState(false);
 
+  const [isRecentTransactionsOpened, setRecentTransactionsOpened] = useState(false);
+
   return <>
     <div className={styles.progressBar}>
       <div style={{width: `${0}%`}} className={styles.bar}/>
@@ -409,7 +419,6 @@ export default function BuyForm() {
       isEnoughBalance={+tokenToPayBalance?.formatted > +amountToPay}
       isApproved={allowanceData >= parseUnits(amountToPay, pickedToken.decimals) || pickedToken.id === 11}
       isApproving={isApproving}
-      isPurchasing={isPurchasing}
       waitingForApprove={waitingForApprove || waitingForPurchase}
       isAmountEntered={Boolean(+amountToPay)}
       symbol={pickedToken.symbol}
@@ -419,9 +428,22 @@ export default function BuyForm() {
       openKeystore={() => setDialogOpened(true)}
     />
 
+    <div className={styles.recentTransactionsField}>
+      <div>
+        <Svg iconName="recent-transactions" />
+        Recent transactions
+      </div>
+      <button onClick={() => setRecentTransactionsOpened(true)} className={styles.textButton}>See all activity</button>
+    </div>
+
     <DrawerDialog onClose={() => setDialogOpened(false)} isOpen={dialogOpened}>
       <KeystoreConnect handleClose={() => setDialogOpened(false)} />
     </DrawerDialog>
+
+    <RecentTransactionsDialog isOpen={isRecentTransactionsOpened} handleClose={() => {
+      setRecentTransactionsOpened(false);
+    }} />
+
     {/*<Button disabled>Wait for the next round</Button>*/}
     <Spacer height={8}/>
   </>;
