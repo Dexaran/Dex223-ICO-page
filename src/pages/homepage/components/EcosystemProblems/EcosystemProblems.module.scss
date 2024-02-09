@@ -113,6 +113,14 @@
     height: 390px;
     min-height: unset;
   }
+
+  //&.withBorderForMobile {
+    @include media.for-mobile {
+      border-bottom: 1px solid colors.$border-primary;
+      border-radius: 0;
+    }
+
+  //}
 }
 
 .slide {
@@ -120,19 +128,30 @@
   gap: 60px;
   grid-template-columns: 589px 1fr;
 
-  @media screen and (max-width: 1395px) {
+  @media screen and (max-width: 1680px) {
+    //grid-template-columns: 530px 1fr;
+    gap: 45px;
+  }
+
+  @media screen and (max-width: 1450px) {
     //grid-template-columns: 530px 1fr;
     gap: 35px;
   }
 
+  @media screen and (max-width: 1200px) {
+    //grid-template-columns: 530px 1fr;
+    gap: 20px;
+  }
+
   @include media.for-laptop {
+    width: 100%;
     grid-template-columns: 1fr;
     gap: 0;
   }
 }
 
 .slideTextWrapper {
-
+  //max-width: 50%;
 }
 
 .sliderHeading {
@@ -154,10 +173,10 @@
 
 .slideParagraphs {
   display: grid;
-  gap: 24px;
+  row-gap: 24px;
 
   @media screen and (max-width: 1395px) {
-    gap: 14px;
+    row-gap: 14px;
   }
 }
 
@@ -230,7 +249,50 @@
 
   @include media.for-mobile {
     padding: 24px 16px;
-    grid-template-rows: auto 56px;
+    grid-template-rows: 56px auto;
+  }
+}
+
+.navigationButton {
+  height: 40px;
+  padding: 0 20px;
+  border: 1px solid colors.$border-primary;
+  color: colors.$text-primary;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  transition-duration: 0.2s;
+  cursor: pointer;
+
+  @include media.for-laptop {
+    width: 100%;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  &:hover {
+    border-color: colors.$text-primary;
+  }
+}
+
+.navigationMobile {
+  display: none;
+
+  > button {
+    @extend .navigationButton;
+  }
+
+  @include media.for-mobile {
+
+      margin-bottom: 16px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -246,30 +308,11 @@
   }
 
   > button {
-    height: 40px;
-    padding: 0 20px;
-    border: 1px solid colors.$border-primary;
-    color: colors.$text-primary;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    transition-duration: 0.2s;
-    cursor: pointer;
+    @extend .navigationButton;
+  }
 
-    @include media.for-laptop {
-      width: 100%;
-    }
-
-    svg {
-      width: 24px;
-      height: 24px;
-    }
-
-    &:hover {
-      border-color: colors.$text-primary;
-    }
+  @include media.for-mobile {
+    display: none;
   }
 }
 
@@ -287,7 +330,7 @@
       content: "";
       position: absolute;
       left: -24px;
-      top: 50%;
+      top: 1rem;
       transform: translateY(-50%);
       width: 8px;
       height: 8px;
@@ -322,14 +365,18 @@
 }
 
 .slideTest {
-  position: absolute;
+  //position: absolute;
+  height: 0;
   opacity: 0;
   visibility: hidden;
+  display: none;
 
   &.active {
+    height: unset;
     position: relative;
     opacity: 1;
     visibility: visible;
+    display: block;
   }
 }
 
@@ -343,6 +390,10 @@
     border: 0;
     border-radius: 0;
     border-bottom: 1px solid colors.$border-primary;
+  }
+
+  @include media.for-mobile {
+    padding: 21px 20px;
   }
 }
 
@@ -461,6 +512,10 @@
     border-radius: 0;
     background-image: url("/images/approve-prob-tablet.png");
   }
+
+  @include media.for-mobile {
+    border: 0;
+  }
 }
 
 .attentionMark {
@@ -519,6 +574,10 @@
     border-bottom: 1px solid var(--border-normal, #5A5A5A);
     left: 1px;
     right: 1px;
+  }
+
+  @include media.for-mobile {
+    border-bottom: 0;
   }
 }
 
@@ -653,10 +712,15 @@
   height: 100%;
 
   @include media.for-laptop {
-    padding: 30px 0 0;
+    padding: 30px 24px 0;
     svg {
       height: 100%;
+      width: 100%;
     }
+  }
+
+  @include media.for-mobile {
+    padding: 15px 24px 15px;
   }
 }
 
@@ -683,6 +747,10 @@
       height: 100%;
       width: 100%;
     }
+  }
+
+  @include media.for-mobile {
+    border: 0;
   }
 }
 
@@ -758,4 +826,119 @@
   top: 7px;
   text-align: left;
   width: 54px;
+}
+
+.calculatorLinkWrapper {
+  padding: 16px 20px;
+  border: 1px solid colors.$palette-red;
+  border-radius: 4px;
+  box-shadow: 0px 0px 24px 8px rgba(255, 51, 51, 0.20);
+
+  @media screen and (max-width: 1400px) {
+    padding: 12px 16px;
+  }
+
+  p {
+    @include typography.t-body-20;
+    color: colors.$text-primary;
+
+    @media screen and (max-width: 1650px) {
+      @include typography.t-body-18;
+    }
+
+    @media screen and (max-width: 1525px) {
+      @include typography.t-body-17;
+    }
+
+    @media screen and (max-width: 1240px) {
+      @include typography.t-body-16;
+    }
+
+    @include media.for-laptop {
+      @include typography.t-body-14;
+    }
+  }
+
+  .losses {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    border-top: 1px solid colors.$palette-red;
+    border-bottom: 1px solid colors.$palette-red;
+    padding: 10px 20px;
+    background: #272727;
+    margin-top: 12px;
+
+    @include media.for-desktop {
+      padding-right: 12px;
+      padding-left: 12px;
+    }
+  }
+
+  .lossesAmount {
+    @include typography.t-body-24;
+    color: colors.$palette-red;
+    font-weight: 600;
+
+    @media screen and (max-width: 1650px) {
+      @include typography.t-body-20;
+    }
+
+    @media screen and (max-width: 1525px) {
+      @include typography.t-body-18
+    }
+
+    @media screen and (max-width: 1240px) {
+      @include typography.t-body-16;
+    }
+
+    @include media.for-laptop {
+      @include typography.t-body-14;
+    }
+
+    .showDesktop {
+      display: block;
+      @media screen and (max-width: 1365px) and (min-width: 1024px){
+        display: none;
+      }
+    }
+
+    .showTablet {
+      display: none;
+      @media screen and (max-width: 1365px) and (min-width: 1024px){
+        display: block;
+      }
+    }
+  }
+
+  .lossesLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    svg {
+      color: colors.$palette-red;
+    }
+
+    span {
+      @include typography.t-body-20;
+      color: colors.$text-primary;
+
+      @media screen and (max-width: 1650px) {
+        @include typography.t-body-17;
+      }
+
+      @media screen and (max-width: 1525px) {
+        @include typography.t-body-16;
+      }
+
+      @media screen and (max-width: 1240px) {
+        @include typography.t-body-14;
+      }
+
+      @include media.for-laptop {
+        @include typography.t-body-14;
+      }
+    }
+  }
 }

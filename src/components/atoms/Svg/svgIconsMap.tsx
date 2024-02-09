@@ -1,6 +1,7 @@
 import React from "react";
 
 export const svgIconsNames = [
+  "open-new-window",
   "error",
   "done",
   "info",
@@ -39,7 +40,17 @@ export const svgIconsNames = [
   "custom-increase",
   "back",
   "auto-config",
-  "check-below"
+  "check-below",
+  "multichain-rollout",
+  "token",
+  "security",
+  "roadmap",
+  "eth",
+  "margin-trading",
+  "auto-listing",
+  "eos",
+  "test",
+  "bug"
 ] as const;
 
 export type IconName = typeof svgIconsNames[number];

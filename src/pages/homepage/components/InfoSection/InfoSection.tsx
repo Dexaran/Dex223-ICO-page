@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./InfoSection.module.scss";
-import NeonBlock from "../../../../components/organisms/NeonBlock";
+import NeonBlock from "../../../../components/organisms/others/NeonBlock";
 import ArticleHeading from "../../../../components/atoms/ArticleHeading";
 import ExternalTextLink from "../../../../components/atoms/ExternalTextLink";
 import Image from "next/image";
@@ -29,7 +29,7 @@ const infoFields = [
   {
     label: "Standard",
     value: <>ERC-223 / Convertable to ERC-20 via <ExternalTextLink text="EIP-7417"
-                                                                   href="https://github.com/Dexaran/EIPs/blob/patch-7/EIPS/eip-7417.md"/></>
+                                                                   href="https://eips.ethereum.org/EIPS/eip-7417"/></>
   },
   {
     label: "Public sale price",
@@ -39,7 +39,7 @@ const infoFields = [
 
 
 export default function InfoSection() {
-  return <div className={"container relative"}>
+  return <div className={"relative"}>
     <div className={styles.pattern}>
       <Image alt="" src="/images/patterns/green.svg" width={1000} height={1000}/>
     </div>

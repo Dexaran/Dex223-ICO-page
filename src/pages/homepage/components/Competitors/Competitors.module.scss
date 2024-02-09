@@ -14,7 +14,8 @@
 
   @include media.for-laptop {
     padding: 0;
-    overflow-y: scroll;
+    overflow-y: hidden;
+    overflow-x: scroll;
   }
 }
 
@@ -56,6 +57,7 @@
 }
 
 .dexBorder {
+  pointer-events: none;
   position: absolute;
   height: 100%;
   left: calc(100% / 6 - 1px);

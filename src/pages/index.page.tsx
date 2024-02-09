@@ -10,9 +10,11 @@ import BuildingTrust from "./homepage/components/BuildingTrust";
 import Fight from "./homepage/components/Fight";
 import ContactUs from "./homepage/components/ContactUs";
 import Spacer from "../components/atoms/Spacer";
-import ScrollToTopButton from "../components/organisms/ScrollToTopButton";
+import ScrollToTopButton from "../components/organisms/others/ScrollToTopButton";
 import MeetTheTeam from "./homepage/components/MeetTheTeam";
 import Layout from "@/components/layout/Layout";
+import MultichainRollout from "@/pages/homepage/components/MultichainRollout";
+import Roadmap from "@/pages/homepage/components/Roadmap";
 
 export default function Home() {
   const [hasMounted, setHasMounted] = useState(false);
@@ -38,6 +40,8 @@ export default function Home() {
         <Spacer height={40}/>
         <Tokenomics/>
         <Spacer height={40}/>
+        <MultichainRollout />
+        <Spacer height={40}/>
         <InfoSection/>
         <Spacer height={40}/>
         <Competitors/>
@@ -45,6 +49,8 @@ export default function Home() {
         <BuildingTrust/>
         <Spacer height={40}/>
         <Fight/>
+        <Spacer height={40}/>
+        <Roadmap/>
         <Spacer height={40}/>
         <MeetTheTeam/>
         <Spacer height={40}/>
