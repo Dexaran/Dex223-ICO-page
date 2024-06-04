@@ -5,7 +5,7 @@ import Spacer from "../../../../components/atoms/Spacer";
 import ArticleHeading from "../../../../components/atoms/ArticleHeading";
 import NeonBlock from "../../../../components/organisms/others/NeonBlock";
 import Image from "next/image";
-import ExternalTextLink from "@/components/atoms/ExternalTextLink";
+import TextLink from "@/components/atoms/ExternalTextLink";
 
 export default function Tokenomics() {
   const [isIntersected, setIsIntersected] = useState(false);
@@ -37,7 +37,7 @@ export default function Tokenomics() {
       leftContent={
         <>
           <ArticleHeading text="Tokenomics"/>
-          <p className={styles.subheading}>DEX223 tokenomics is based on the <ExternalTextLink text="launch model of the Ethereum platform" href="https://web.archive.org/web/20140824160811/https://www.ethereum.org/" />, one of the most successful crypto projects out there.</p>
+          <p className={styles.subheading}>DEX223 tokenomics is based on the <TextLink text="launch model of the Ethereum platform" href="https://web.archive.org/web/20140824160811/https://www.ethereum.org/" />, one of the most successful crypto projects out there.</p>
           <div className={styles.paragraphs}>
             <p className={styles.text}>The original D223 tokens will be issued in November 2023 on Ethereum mainnet.
               Once
@@ -66,7 +66,7 @@ export default function Tokenomics() {
       }
     />
     <div ref={ref}/>
-    <div className="container relative">
+    <div className="container_internal relative">
       <div className={styles.pattern}>
         <Image alt="" src="/images/patterns/purple.svg" width={883} height={890}/>
       </div>
@@ -101,7 +101,7 @@ export default function Tokenomics() {
         <Spacer height={20}/>
       </div>
     </div>
-    <div className="container">
+    <div className="container_internal">
       <div className={styles.labels}>
         <div className={styles.columnLabel}>
           <span className={styles.labelText}>Discounted pre-ICO sales</span>
@@ -118,7 +118,7 @@ export default function Tokenomics() {
             className={styles.labelPercentage}>9.5%</span></span>
         </div>
         <div className={styles.columnLabel}>
-          <span className={styles.labelText}>Private investment rounds</span>
+          <span className={styles.labelText}>Private purchase rounds</span>
           <span className={styles.labelValue}>800,000,000 D223 <span
             className={styles.labelPercentage}>10%</span></span>
         </div>

@@ -2,13 +2,13 @@ import React, { useRef } from "react";
 import styles from "./ContactUs.module.scss";
 import ArticleHeading from "../../../../components/atoms/ArticleHeading";
 import NeonBlock from "../../../../components/organisms/others/NeonBlock";
-import ExternalTextLink from "../../../../components/atoms/ExternalTextLink";
+import TextLink from "../../../../components/atoms/ExternalTextLink";
 import Svg from "../../../../components/atoms/Svg";
 import ContactUsImage from "../../../../assets/images/tg-contact-us.svg";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import clsx from "clsx";
 import Image from "next/image";
-import { dexEmail, dexEmailLink } from "@/constants/email";
+import { dexEmail, dexEmailLink, mediaEmail, mediaEmailLink } from "@/constants/email";
 
 export default function ContactUs() {
   const ref = useRef();
@@ -26,11 +26,11 @@ export default function ContactUs() {
       leftContent={
         <>
           <ArticleHeading text="Get in touch"/>
-          <p className={styles.text}>
-            To contact us please fill out the form below which sends letters to
-            email <ExternalTextLink text={dexEmail} href={dexEmailLink}/> or
-            Telegram <ExternalTextLink text="@Dexaran" href="https://t.me/Dexaran"/>.
-          </p>
+          <div className={styles.texts}>
+            <p className={styles.text}>Questions regarding the private sales or large-scale purchase proposals: <TextLink text={dexEmail} href={dexEmailLink} /> </p>
+            <p className={styles.text}>Marketing and general inquiries: <TextLink text={mediaEmail} href={mediaEmailLink} /></p>
+            <p className={styles.text}>You can ask your questions in our telegram group where admins will help you to connect with the right person: <TextLink href="https://t.me/Dex223_defi" text="https://t.me/Dex223_defi" /></p>
+          </div>
           <div className={styles.buttonsWrapper}>
             <a href={dexEmailLink}>
               <button>
@@ -38,7 +38,7 @@ export default function ContactUs() {
                 <Svg iconName="email"/>
               </button>
             </a>
-            <a href="https://t.me/Dexaran">
+            <a href="https://t.me/Dex223_defi">
               <button>
             <span>
               Telegram

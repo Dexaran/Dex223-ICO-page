@@ -8,12 +8,24 @@ import Svg from "@/components/atoms/Svg";
 
 const reports = [
   {
+    text: "May 2024",
+    href: "https://gist.github.com/Dexaran/a4d14551f3ddc58a96c5664c2f76b5b2"
+  },
+  {
+    text: "April 2024",
+    href: "https://gist.github.com/Dexaran/8556c6f63d9968e7e293980d7ddd1b23"
+  },
+  {
+    text: "March 2024",
+    href: "https://gist.github.com/Dexaran/2f805faf302366f42817d85aec14d1bc"
+  },
+  {
     text: "February 2024",
-    href: "https://dexaran820.medium.com/dex223-development-report-2-8-2024-639c9900b3b2"
+    href: "https://gist.github.com/Dexaran/1aacf32eae073f2e930fdf22b7cecd0b"
   },
   {
     text: "Round 2 Completion Report",
-    href: "https://dexaran820.medium.com/dex223-pre-sale-round-2-completion-report-14f09ab079cc"
+    href: "https://gist.github.com/Dexaran/d1e93da8f25dfbc9bd35575af085f2b3"
   },
   {
     text: "Pre-sale round 2 (04.12.2023 - 10.01.2024)",
@@ -21,11 +33,11 @@ const reports = [
   },
   {
     text: "December 2023",
-    href: "https://dexaran820.medium.com/dex223-development-report-12-2-2023-4c16487fb7ed"
+    href: "https://gist.github.com/Dexaran/f0a62796ca4153c1ffc75ba9ca34ab70"
   },
   {
     text: "November 2023",
-    href: "https://dexaran820.medium.com/dex223-development-report-11-2-2023-e0d51552ba5f"
+    href: "https://gist.github.com/Dexaran/62cece71a667695edad1967d701e9958"
   },
   {
     text: "Pre-sale round 1 (15.09.2023 - 16.09.2023)",
